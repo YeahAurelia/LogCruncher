@@ -6,8 +6,9 @@ namespace LogCruncher
 {
     internal class Program
     {
-        int counter =0;
-        Dictionary<string, string> worldEventTimes = new Dictionary<string, string>();
+        int worldEventCounter =0;
+        
+        OET worldEventTimes = new OET();
         List<string> worldEventTypes = new List<string>();
         string currentLine;//the current line in the opened log
         string logToOpen;//the log that must be opened
@@ -73,7 +74,8 @@ namespace LogCruncher
                     Console.ReadLine();
                 }
             }
-            worldEventTimes.Add(worldLine.Substring(15, 8), eventName);
+            worldEventTimes.Add(worldEventCounter,worldLine.Substring(15, 8), eventName);
+            worldEventCounter++;
         }
     }
 }
