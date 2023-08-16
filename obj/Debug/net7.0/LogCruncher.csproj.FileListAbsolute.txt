@@ -1,0 +1,15 @@
+/home/catto/GitHub/LogCruncher/bin/Debug/net7.0/LogCruncher
+/home/catto/GitHub/LogCruncher/bin/Debug/net7.0/LogCruncher.deps.json
+/home/catto/GitHub/LogCruncher/bin/Debug/net7.0/LogCruncher.runtimeconfig.json
+/home/catto/GitHub/LogCruncher/bin/Debug/net7.0/LogCruncher.dll
+/home/catto/GitHub/LogCruncher/bin/Debug/net7.0/LogCruncher.pdb
+/home/catto/GitHub/LogCruncher/obj/Debug/net7.0/LogCruncher.csproj.AssemblyReference.cache
+/home/catto/GitHub/LogCruncher/obj/Debug/net7.0/LogCruncher.GeneratedMSBuildEditorConfig.editorconfig
+/home/catto/GitHub/LogCruncher/obj/Debug/net7.0/LogCruncher.AssemblyInfoInputs.cache
+/home/catto/GitHub/LogCruncher/obj/Debug/net7.0/LogCruncher.AssemblyInfo.cs
+/home/catto/GitHub/LogCruncher/obj/Debug/net7.0/LogCruncher.csproj.CoreCompileInputs.cache
+/home/catto/GitHub/LogCruncher/obj/Debug/net7.0/LogCruncher.dll
+/home/catto/GitHub/LogCruncher/obj/Debug/net7.0/refint/LogCruncher.dll
+/home/catto/GitHub/LogCruncher/obj/Debug/net7.0/LogCruncher.pdb
+/home/catto/GitHub/LogCruncher/obj/Debug/net7.0/LogCruncher.genruntimeconfig.cache
+/home/catto/GitHub/LogCruncher/obj/Debug/net7.0/ref/LogCruncher.dll
