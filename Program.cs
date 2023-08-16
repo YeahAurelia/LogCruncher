@@ -6,10 +6,10 @@ namespace LogCruncher
 {
     internal class Program
     {
-        int worldEventCounter =0;
-        
-        OET worldEventTimes = new OET();
-        List<string> worldEventTypes = new List<string>();
+        int worldEventCounter = 0;
+
+        OET worldOET = new OET();
+        string[] worldEventTypes = {"Round_Start","Round_Overtime","Round_Win","Round_Length","Game_Over"};
         string currentLine;//the current line in the opened log
         string logToOpen;//the log that must be opened
         bool logCheck;//bool for checking if log loaded and a line can be read
@@ -22,11 +22,6 @@ namespace LogCruncher
         }
         void start()
         {
-            worldEventTypes.Add("Round_Start");
-            worldEventTypes.Add("Round_Overtime");
-            worldEventTypes.Add("Round_Win");
-            worldEventTypes.Add("Round_Length");
-            worldEventTypes.Add("Game_Over");
             while (complete == false)
             {
                 Console.WriteLine("What log is being opened");
@@ -51,6 +46,7 @@ namespace LogCruncher
                         logCheck = true;
                     }
                     logCheck = true;//stops the infinate loop (i am very smaart)
+                    Console.WriteLine();
                 }
             }
         }
@@ -74,7 +70,7 @@ namespace LogCruncher
                     Console.ReadLine();
                 }
             }
-            worldEventTimes.Add(worldEventCounter,worldLine.Substring(15, 8), eventName);
+            worldOET.Add(worldEventCounter, worldLine.Substring(15, 8), eventName);
             worldEventCounter++;
         }
     }
