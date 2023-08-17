@@ -1,13 +1,14 @@
 ﻿using System;
 using System.IO;
 using OETFunctions;
+using PlayerHandler;
 
 namespace LogCruncher
 {
     internal class Program
     {
         int worldEventCounter = 0;
-
+        Dictionary<int,int> test = new Dictionary<int, int>();
         OET worldOET = new OET();
         string[] worldEventTypes = {"Round_Start","Round_Overtime","Round_Win","Round_Length","Game_Over"};
         string currentLine;//the current line in the opened log
