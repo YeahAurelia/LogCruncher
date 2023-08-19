@@ -93,19 +93,31 @@ namespace LogCruncher
                 playerCount++;
                 Console.WriteLine("2");
                 Console.ReadLine();
+                playerList[playerIndexTracker[playerName]].Team = "test";
+                Console.WriteLine(playerLine);
             }
-            if (playerLine.Contains("Red") /*&& playerList[playerIndexTracker[playerName]].Team == "" */&& playerLine.IndexOf("Red") < playerLine.IndexOf("Blue"))//Checks player team and makes sure value isn't already described for red
+            if (playerLine.Contains("Red") /*&& playerList[playerIndexTracker[playerName]].Team == "" */)//Checks player team and makes sure value isn't already described for red
             {
-                playerList[playerIndexTracker[playerName]].Team = "Red";
-                Console.WriteLine("3");
-                Console.ReadLine();
+                if (playerLine.Contains("Blue") && playerLine.IndexOf("Red") < playerLine.IndexOf("Blue"))
+                {
+                    playerList[playerIndexTracker[playerName]].Team = "Red";
+                }
+                else if(!playerLine.Contains("Blue"))
+                {
+                    playerList[playerIndexTracker[playerName]].Team = "Red";
+                }
             }
-            if (playerLine.Contains("Blue") /*&& playerList[playerIndexTracker[playerName]].Team == "" */&& playerLine.IndexOf("Red") > playerLine.IndexOf("Blue"))//Checks player team and makes sure value isn't already described for blue
+            if (playerLine.Contains("Blue") /*&& playerList[playerIndexTracker[playerName]].Team == "" */)//Checks player team and makes sure value isn't already described for blue
             {
-                playerList[playerIndexTracker[playerName]].Team = "Blue";
-                Console.WriteLine(playerList[playerIndexTracker[playerName]].Team);
-                Console.WriteLine("3");
-                Console.ReadLine();
+                if (playerLine.Contains("Red") && playerLine.IndexOf("Red") > playerLine.IndexOf("Blue"))
+                {
+                    playerList[playerIndexTracker[playerName]].Team = "Blue";
+                    Console.WriteLine(playerList[playerIndexTracker[playerName]].Team);
+                }
+                else if(!playerLine.Contains("Red"))
+                {
+                    playerList[playerIndexTracker[playerName]].Team = "Blue";
+                }
             }
             Console.WriteLine(playerList[playerIndexTracker[playerName]].Team + playerList[playerIndexTracker[playerName]].UserName);
             Console.ReadLine();
