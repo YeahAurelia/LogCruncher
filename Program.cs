@@ -84,22 +84,30 @@ namespace LogCruncher
         void TrackPlayerEvents(string playerLine)
         {
             string playerName = playerLine.Substring(playerLine.IndexOf("\"") + 1, playerLine.IndexOf("<") - 26);// I have no idea why that had to be -26 like ?!?!?!??!
+            Console.WriteLine("1");
+            Console.ReadLine();
             if (playerIndexTracker.ContainsKey(playerName) == false)
             {
                 playerIndexTracker.Add(playerName, playerCount);
                 playerList.Add(new PlayerStatsBasic(playerName, "", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
                 playerCount++;
+                Console.WriteLine("2");
+                Console.ReadLine();
             }
-            if (playerLine.Contains("Red") && playerList[playerIndexTracker[playerName]].Team == "" && playerLine.IndexOf("Red") < playerLine.IndexOf("Blue"))//Checks player team and makes sure value isn't already described for red
+            if (playerLine.Contains("Red") /*&& playerList[playerIndexTracker[playerName]].Team == "" */&& playerLine.IndexOf("Red") < playerLine.IndexOf("Blue"))//Checks player team and makes sure value isn't already described for red
             {
                 playerList[playerIndexTracker[playerName]].Team = "Red";
+                Console.WriteLine("3");
+                Console.ReadLine();
             }
-            if (playerLine.Contains("Blue") && playerList[playerIndexTracker[playerName]].Team == "" && playerLine.IndexOf("Red") > playerLine.IndexOf("Blue"))//Checks player team and makes sure value isn't already described for blue
+            if (playerLine.Contains("Blue") /*&& playerList[playerIndexTracker[playerName]].Team == "" */&& playerLine.IndexOf("Red") > playerLine.IndexOf("Blue"))//Checks player team and makes sure value isn't already described for blue
             {
                 playerList[playerIndexTracker[playerName]].Team = "Blue";
                 Console.WriteLine(playerList[playerIndexTracker[playerName]].Team);
+                Console.WriteLine("3");
+                Console.ReadLine();
             }
-            Console.WriteLine(playerList[playerIndexTracker[playerName]].Team);
+            Console.WriteLine(playerList[playerIndexTracker[playerName]].Team + playerList[playerIndexTracker[playerName]].UserName);
             Console.ReadLine();
         }
     }
