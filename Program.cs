@@ -8,11 +8,14 @@ namespace LogCruncher
     internal class Program
     {
         int worldEventCounter = 0;
-        Dictionary<int,int> test = new Dictionary<int, int>();
+        int playerCount = 0;
+        List<PlayerStatsBasic> playerList = new List<PlayerStatsBasic>();
+        Dictionary<string, int> playerIndexTracker = new Dictionary<string, int>();
+        Dictionary<int, int> test = new Dictionary<int, int>();
         OET worldOET = new OET();
-        string[] worldEventTypes = {"Round_Start","Round_Overtime","Round_Win","Round_Length","Game_Over"};
-        string currentLine;//the current line in the opened log
-        string logToOpen;//the log that must be opened
+        string[] worldEventTypes = { "Round_Start", "Round_Overtime", "Round_Win", "Round_Length", "Game_Over" };
+        string currentLine = "N/A";//the current line in the opened log
+        string logToOpen = "N/A";//the log that must be opened
         bool logCheck;//bool for checking if log loaded and a line can be read
         bool complete = false;
         static void Main(string[] args)
@@ -58,6 +61,10 @@ namespace LogCruncher
                 Console.WriteLine("yeah");
                 TrackWorldEvents(logLine);
             }
+            if (logLine.Contains("shot_fired"))
+            {
+                TrackPlayerEvents(logLine);
+            }
         }
         void TrackWorldEvents(string worldLine)//keeps track of world triggers like round start and end and overtime
         {
@@ -73,6 +80,27 @@ namespace LogCruncher
             }
             worldOET.Add(worldEventCounter, worldLine.Substring(15, 8), eventName);
             worldEventCounter++;
+        }
+        void TrackPlayerEvents(string playerLine)
+        {
+            string playerName = playerLine.Substring(playerLine.IndexOf("\"") + 1, playerLine.IndexOf("<") - 26);// I have no idea why that had to be -26 like ?!?!?!??!
+            if (playerIndexTracker.ContainsKey(playerName) == false)
+            {
+                playerIndexTracker.Add(playerName, playerCount);
+                playerList.Add(new PlayerStatsBasic(playerName, "", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+                playerCount++;
+            }
+            if (playerLine.Contains("Red") && playerList[playerIndexTracker[playerName]].Team == "" && playerLine.IndexOf("Red") < playerLine.IndexOf("Blue"))//Checks player team and makes sure value isn't already described for red
+            {
+                playerList[playerIndexTracker[playerName]].Team = "Red";
+            }
+            if (playerLine.Contains("Blue") && playerList[playerIndexTracker[playerName]].Team == "" && playerLine.IndexOf("Red") > playerLine.IndexOf("Blue"))//Checks player team and makes sure value isn't already described for blue
+            {
+                playerList[playerIndexTracker[playerName]].Team = "Blue";
+                Console.WriteLine(playerList[playerIndexTracker[playerName]].Team);
+            }
+            Console.WriteLine(playerList[playerIndexTracker[playerName]].Team);
+            Console.ReadLine();
         }
     }
 }
