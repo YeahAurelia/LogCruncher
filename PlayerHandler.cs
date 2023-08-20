@@ -1,8 +1,8 @@
 namespace PlayerHandler
 {
-    public class PlayerStatsBasic
+    public class PlayerStats
     {
-        public PlayerStatsBasic(string playerClass, string team, string weapon, string userName, int damageDelt, int damageTaken, int shotsTotal, int shotsHit, int healingDone, int healingRecieved, int kills, int deaths, int assists, int healthPickups)//yeesh
+        public PlayerStats(string playerClass, string team, string weapon, string userName, int damageDelt, int damageTaken, int shotsTotal, int shotsHit, int healingDone, int healingRecieved, int kills, int deaths, int assists, int healthPickups)//yeesh
         {
             this.UserName = userName;
             this.Team =team;
@@ -18,6 +18,7 @@ namespace PlayerHandler
             this.Deaths = deaths;
             this.Assists = assists;
             this.HealthPickups = healthPickups;
+            this.All = this.UserName + this.Team + this.PlayerClass + this.Weapon + this.DamageDelt + this.DamageTaken + this.ShotsTotal + this.ShotsHit + this.HealingDone + this.HealingRecieved + this.Kills + this.Deaths + this.Assists + this.HealthPickups;
         }
         public string UserName { set; get; }
         public string Team{set; get;}
@@ -33,6 +34,6 @@ namespace PlayerHandler
         public int Deaths { set; get; }
         public int Assists { set; get; }
         public int HealthPickups { set; get; }
-
+        public string All {set; get;}
     }
 }

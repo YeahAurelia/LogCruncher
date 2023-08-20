@@ -9,7 +9,7 @@ namespace LogCruncher
     {
         int worldEventCounter = 0;
         int playerCount = 0;
-        List<PlayerStatsBasic> playerList = new List<PlayerStatsBasic>();
+        List<PlayerStats> playerList = new List<PlayerStats>();
         Dictionary<string, int> playerIndexTracker = new Dictionary<string, int>();
         Dictionary<int, int> test = new Dictionary<int, int>();
         OET worldOET = new OET();
@@ -58,10 +58,9 @@ namespace LogCruncher
         {
             if (logLine.Contains("World triggered"))// if true then this indicates a round has begun, ended, entered overtime or won/lost
             {
-                Console.WriteLine("yeah");
                 TrackWorldEvents(logLine);
             }
-            if (logLine.Contains("shot_fired"))
+            if (logLine.Contains("U:1")&& !logLine.Contains("pointcaptured"))//this line always appears in user related lines but never world related lines
             {
                 TrackPlayerEvents(logLine);
             }
@@ -75,7 +74,6 @@ namespace LogCruncher
                 {
                     eventName = worldEventTypes[i];
                     Console.WriteLine(eventName);
-                    Console.ReadLine();
                 }
             }
             worldOET.Add(worldEventCounter, worldLine.Substring(15, 8), eventName);
@@ -84,19 +82,14 @@ namespace LogCruncher
         void TrackPlayerEvents(string playerLine)
         {
             string playerName = playerLine.Substring(playerLine.IndexOf("\"") + 1, playerLine.IndexOf("<") - 26);// I have no idea why that had to be -26 like ?!?!?!??!
-            Console.WriteLine("1");
-            Console.ReadLine();
+
             if (playerIndexTracker.ContainsKey(playerName) == false)
             {
                 playerIndexTracker.Add(playerName, playerCount);
-                playerList.Add(new PlayerStatsBasic(playerName, "", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+                playerList.Add(new PlayerStats(playerName, "", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
                 playerCount++;
-                Console.WriteLine("2");
-                Console.ReadLine();
-                playerList[playerIndexTracker[playerName]].Team = "test";
-                Console.WriteLine(playerLine);
             }
-            if (playerLine.Contains("Red") /*&& playerList[playerIndexTracker[playerName]].Team == "" */)//Checks player team and makes sure value isn't already described for red
+            if (playerLine.Contains("Red") && playerList[playerIndexTracker[playerName]].Team == "" )//Checks player team and makes sure value isn't already described for red
             {
                 if (playerLine.Contains("Blue") && playerLine.IndexOf("Red") < playerLine.IndexOf("Blue"))
                 {
@@ -107,7 +100,7 @@ namespace LogCruncher
                     playerList[playerIndexTracker[playerName]].Team = "Red";
                 }
             }
-            if (playerLine.Contains("Blue") /*&& playerList[playerIndexTracker[playerName]].Team == "" */)//Checks player team and makes sure value isn't already described for blue
+            if (playerLine.Contains("Blue")&& playerList[playerIndexTracker[playerName]].Team == "")//Checks player team and makes sure value isn't already described for blue
             {
                 if (playerLine.Contains("Red") && playerLine.IndexOf("Red") > playerLine.IndexOf("Blue"))
                 {
@@ -119,8 +112,7 @@ namespace LogCruncher
                     playerList[playerIndexTracker[playerName]].Team = "Blue";
                 }
             }
-            Console.WriteLine(playerList[playerIndexTracker[playerName]].Team + playerList[playerIndexTracker[playerName]].UserName);
-            Console.ReadLine();
+            Console.WriteLine(playerList[playerIndexTracker[playerName]].All);
         }
     }
 }
