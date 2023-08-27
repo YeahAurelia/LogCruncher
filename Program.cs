@@ -43,6 +43,7 @@ namespace LogCruncher
                                 ReadLog(currentLine);
                             }
                         }
+                        Console.Write(playerList.Count() + " players");
                     }
                     catch (Exception e)
                     {
@@ -50,7 +51,7 @@ namespace LogCruncher
                         logCheck = true;
                     }
                     logCheck = true;//stops the infinate loop (i am very smaart)
-                    Console.WriteLine();
+                    Console.WriteLine();//why is this here?
                 }
             }
         }
@@ -82,7 +83,7 @@ namespace LogCruncher
         void TrackPlayerEvents(string playerLine)
         {
             string playerName = playerLine.Substring(playerLine.IndexOf("\"") + 1, playerLine.IndexOf("<") - 26);// I have no idea why that had to be -26 like ?!?!?!??!
-
+        // code below for defining every player
             if (playerIndexTracker.ContainsKey(playerName) == false)
             {
                 playerIndexTracker.Add(playerName, playerCount);
