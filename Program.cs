@@ -29,7 +29,7 @@ namespace LogCruncher
             while (complete == false)
             {
                 Console.WriteLine("What log is being opened");
-                logToOpen = Console.ReadLine();
+                logToOpen = Console.ReadLine()+".log";
                 logCheck = false;
                 while (logCheck == false)
                 {
@@ -61,7 +61,7 @@ namespace LogCruncher
             {
                 TrackWorldEvents(logLine);
             }
-            if (logLine.Contains("U:1")&& !logLine.Contains("pointcaptured"))//this line always appears in user related lines but never world related lines
+            if (logLine.Contains("U:1") && !logLine.Contains("pointcaptured"))//this line always appears in user related lines but never world related lines
             {
                 TrackPlayerEvents(logLine);
             }
@@ -83,41 +83,51 @@ namespace LogCruncher
         void TrackPlayerEvents(string playerLine)
         {
             string playerName = playerLine.Substring(playerLine.IndexOf("\"") + 1, playerLine.IndexOf("<") - 26);// -26 cos there are 26 characters at the start of everyline in a log file
-            Console.WriteLine(playerName);
-            string playerID = playerLine.Substring(playerLine.IndexOf("U:1:")+4,9);//gets steam ID of the players
-            Console.WriteLine(playerID);
-            Console.ReadLine();
-        // code below for defining players
+            //Console.WriteLine(playerName);
+            string playerID = playerLine.Substring(playerLine.IndexOf("U:1:") + 4, 9);//gets steam ID of the players
+            // code below for defining players
             if (playerIndexTracker.ContainsKey(playerID) == false)//tracking where in the list of players a certain player is using their steam ID
             {
                 playerIndexTracker.Add(playerID, playerCount);
                 playerList.Add(new PlayerStats(playerID, playerName));
                 playerCount++;
             }
-            if (playerLine.Contains("Red") && playerList[playerIndexTracker[playerID]].Team == "" )//Checks player team and makes sure value isn't already described for red
+            //has their team been defined
+            if (playerLine.Contains("Red") && playerList[playerIndexTracker[playerID]].Team == "")//Checks player team and makes sure value isn't already described for red
             {
                 if (playerLine.Contains("Blue") && playerLine.IndexOf("Red") < playerLine.IndexOf("Blue"))
                 {
                     playerList[playerIndexTracker[playerID]].Team = "Red";
                 }
-                else if(!playerLine.Contains("Blue"))
+                else if (!playerLine.Contains("Blue"))
                 {
                     playerList[playerIndexTracker[playerID]].Team = "Red";
                 }
             }
-            if (playerLine.Contains("Blue")&& playerList[playerIndexTracker[playerID]].Team == "")//Checks player team and makes sure value isn't already described for blue
+            if (playerLine.Contains("Blue") && playerList[playerIndexTracker[playerID]].Team == "")//Checks player team and makes sure value isn't already described for blue
             {
                 if (playerLine.Contains("Red") && playerLine.IndexOf("Red") > playerLine.IndexOf("Blue"))
                 {
                     playerList[playerIndexTracker[playerID]].Team = "Blue";
-                    Console.WriteLine(playerList[playerIndexTracker[playerID]].Team);
+                    //Console.WriteLine(playerList[playerIndexTracker[playerID]].Team);
                 }
-                else if(!playerLine.Contains("Red"))
+                else if (!playerLine.Contains("Red"))
                 {
                     playerList[playerIndexTracker[playerID]].Team = "Blue";
                 }
             }
-            Console.WriteLine(playerList[playerIndexTracker[playerID]].All);
+            //what have they done in this line
+            if (playerLine.Contains("shot_fired"))
+            {
+                int weaponIndex = playerLine.IndexOf("weapon");
+                int bracketIndex = playerLine.IndexOf(")");
+                Console.WriteLine(weaponIndex + " " + bracketIndex);
+                Console.ReadLine();
+                playerList[playerIndexTracker[playerID]].Weapon = playerLine.Substring(weaponIndex+6,bracketIndex);
+                Console.WriteLine(playerList[playerIndexTracker[playerID]].Weapon);
+                Console.ReadLine();
+            }
+            //Console.WriteLine(playerList[playerIndexTracker[playerID]].All);
         }
     }
 }
