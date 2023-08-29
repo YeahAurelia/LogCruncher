@@ -82,42 +82,42 @@ namespace LogCruncher
         }
         void TrackPlayerEvents(string playerLine)
         {
-            string playerName = playerLine.Substring(playerLine.IndexOf("\"") + 1, playerLine.IndexOf("<") - 26);// -26 cos there are 26 characters at the start of a line in the log file
+            string playerName = playerLine.Substring(playerLine.IndexOf("\"") + 1, playerLine.IndexOf("<") - 26);// -26 cos there are 26 characters at the start of everyline in a log file
             Console.WriteLine(playerName);
             string playerID = playerLine.Substring(playerLine.IndexOf("U:1:")+4,9);//gets steam ID of the players
             Console.WriteLine(playerID);
             Console.ReadLine();
         // code below for defining players
-            if (playerIndexTracker.ContainsKey(playerName) == false)
+            if (playerIndexTracker.ContainsKey(playerID) == false)//tracking where in the list of players a certain player is using their steam ID
             {
-                playerIndexTracker.Add(playerName, playerCount);
-                playerList.Add(new PlayerStats(playerID, playerName, "", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+                playerIndexTracker.Add(playerID, playerCount);
+                playerList.Add(new PlayerStats(playerID, playerName));
                 playerCount++;
             }
-            if (playerLine.Contains("Red") && playerList[playerIndexTracker[playerName]].Team == "" )//Checks player team and makes sure value isn't already described for red
+            if (playerLine.Contains("Red") && playerList[playerIndexTracker[playerID]].Team == "" )//Checks player team and makes sure value isn't already described for red
             {
                 if (playerLine.Contains("Blue") && playerLine.IndexOf("Red") < playerLine.IndexOf("Blue"))
                 {
-                    playerList[playerIndexTracker[playerName]].Team = "Red";
+                    playerList[playerIndexTracker[playerID]].Team = "Red";
                 }
                 else if(!playerLine.Contains("Blue"))
                 {
-                    playerList[playerIndexTracker[playerName]].Team = "Red";
+                    playerList[playerIndexTracker[playerID]].Team = "Red";
                 }
             }
-            if (playerLine.Contains("Blue")&& playerList[playerIndexTracker[playerName]].Team == "")//Checks player team and makes sure value isn't already described for blue
+            if (playerLine.Contains("Blue")&& playerList[playerIndexTracker[playerID]].Team == "")//Checks player team and makes sure value isn't already described for blue
             {
                 if (playerLine.Contains("Red") && playerLine.IndexOf("Red") > playerLine.IndexOf("Blue"))
                 {
-                    playerList[playerIndexTracker[playerName]].Team = "Blue";
-                    Console.WriteLine(playerList[playerIndexTracker[playerName]].Team);
+                    playerList[playerIndexTracker[playerID]].Team = "Blue";
+                    Console.WriteLine(playerList[playerIndexTracker[playerID]].Team);
                 }
                 else if(!playerLine.Contains("Red"))
                 {
-                    playerList[playerIndexTracker[playerName]].Team = "Blue";
+                    playerList[playerIndexTracker[playerID]].Team = "Blue";
                 }
             }
-            Console.WriteLine(playerList[playerIndexTracker[playerName]].All);
+            Console.WriteLine(playerList[playerIndexTracker[playerID]].All);
         }
     }
 }
