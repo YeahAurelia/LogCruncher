@@ -82,12 +82,16 @@ namespace LogCruncher
         }
         void TrackPlayerEvents(string playerLine)
         {
-            string playerName = playerLine.Substring(playerLine.IndexOf("\"") + 1, playerLine.IndexOf("<") - 26);// I have no idea why that had to be -26 like ?!?!?!??!
-        // code below for defining every player
+            string playerName = playerLine.Substring(playerLine.IndexOf("\"") + 1, playerLine.IndexOf("<") - 26);// -26 cos there are 26 characters at the start of a line in the log file
+            Console.WriteLine(playerName);
+            string playerID = playerLine.Substring(playerLine.IndexOf("U:1:")+4,9);//gets steam ID of the players
+            Console.WriteLine(playerID);
+            Console.ReadLine();
+        // code below for defining players
             if (playerIndexTracker.ContainsKey(playerName) == false)
             {
                 playerIndexTracker.Add(playerName, playerCount);
-                playerList.Add(new PlayerStats(playerName, "", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+                playerList.Add(new PlayerStats(playerID, playerName, "", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
                 playerCount++;
             }
             if (playerLine.Contains("Red") && playerList[playerIndexTracker[playerName]].Team == "" )//Checks player team and makes sure value isn't already described for red

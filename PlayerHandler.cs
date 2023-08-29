@@ -2,8 +2,9 @@ namespace PlayerHandler
 {
     public class PlayerStats
     {
-        public PlayerStats(string playerClass, string team, string weapon, string userName, int damageDelt, int damageTaken, int shotsTotal, int shotsHit, int healingDone, int healingRecieved, int kills, int deaths, int assists, int healthPickups)//yeesh
+        public PlayerStats(string userID, string playerClass, string team, string weapon, string userName, int damageDelt, int damageTaken, int shotsTotal, int shotsHit, int healingDone, int healingRecieved, int kills, int deaths, int assists, int healthPickups)//yeesh
         {
+            this.UserID = userID;
             this.UserName = userName;
             this.Team =team;
             this.PlayerClass=playerClass;//class in this instance refers to the nine classes in the game not classes the programming thing
@@ -20,6 +21,7 @@ namespace PlayerHandler
             this.HealthPickups = healthPickups;
             this.All = this.UserName + this.Team + this.PlayerClass + this.Weapon + this.DamageDelt + this.DamageTaken + this.ShotsTotal + this.ShotsHit + this.HealingDone + this.HealingRecieved + this.Kills + this.Deaths + this.Assists + this.HealthPickups;
         }
+        public string UserID {set; get;}
         public string UserName { set; get; }
         public string Team{set; get;}
         public string PlayerClass { set; get; }

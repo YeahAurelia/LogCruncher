@@ -1,1 +1,2 @@
 8chars in time 15 chars from line start
+, playerLine.IndexOf("]><")
