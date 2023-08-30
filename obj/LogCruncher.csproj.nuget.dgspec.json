@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/home/catto/GitHub/LogCruncher/LogCruncher.csproj": {}
+    "/home/relz/GitHub/LogCruncher/LogCruncher.csproj": {}
   },
   "projects": {
-    "/home/catto/GitHub/LogCruncher/LogCruncher.csproj": {
+    "/home/relz/GitHub/LogCruncher/LogCruncher.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/catto/GitHub/LogCruncher/LogCruncher.csproj",
+        "projectUniqueName": "/home/relz/GitHub/LogCruncher/LogCruncher.csproj",
         "projectName": "LogCruncher",
-        "projectPath": "/home/catto/GitHub/LogCruncher/LogCruncher.csproj",
-        "packagesPath": "/home/catto/.nuget/packages/",
-        "outputPath": "/home/catto/GitHub/LogCruncher/obj/",
+        "projectPath": "/home/relz/GitHub/LogCruncher/LogCruncher.csproj",
+        "packagesPath": "/home/relz/.nuget/packages/",
+        "outputPath": "/home/relz/GitHub/LogCruncher/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/catto/.nuget/NuGet/NuGet.Config"
+          "/home/relz/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"

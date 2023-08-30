@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "R5gP0nz0rNLdg7Q4WlxQm02+jvtoSHwM9KJHOPY3aeVci3Mw6YMBshEWEgv1SwdgMwJuo1DerUN7SGy3p1UOcg==",
+  "dgSpecHash": "48hB94Q0GNcz/MGRNm3I1aI4Y6ZB8nYC7mqrhophxdF7WEEGtwXNKSJdu1TRgWEkx+6lkDqfyDufuIdxC22IJA==",
   "success": true,
-  "projectFilePath": "/home/catto/GitHub/LogCruncher/LogCruncher.csproj",
+  "projectFilePath": "/home/relz/GitHub/LogCruncher/LogCruncher.csproj",
   "expectedPackageFiles": [
-    "/home/catto/.nuget/packages/microsoft.aspnetcore.app.ref/7.0.10/microsoft.aspnetcore.app.ref.7.0.10.nupkg.sha512"
+    "/home/relz/.nuget/packages/microsoft.aspnetcore.app.ref/7.0.10/microsoft.aspnetcore.app.ref.7.0.10.nupkg.sha512"
   ],
   "logs": []
 }

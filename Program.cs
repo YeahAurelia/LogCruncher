@@ -123,7 +123,7 @@ namespace LogCruncher
                 int bracketIndex = playerLine.IndexOf(")");
                 Console.WriteLine(weaponIndex + " " + bracketIndex);
                 Console.ReadLine();
-                playerList[playerIndexTracker[playerID]].Weapon = playerLine.Substring(weaponIndex+6,bracketIndex);
+                playerList[playerIndexTracker[playerID]].Weapon = playerLine.Substring(weaponIndex+8,bracketIndex-weaponIndex-9);//woof
                 Console.WriteLine(playerList[playerIndexTracker[playerID]].Weapon);
                 Console.ReadLine();
             }
