@@ -7,11 +7,13 @@ namespace LogCruncher
 {
     internal class Program
     {
+        PlayerStats tester = new PlayerStats("", "");
         int worldEventCounter = 0;
         int playerCount = 0;
+        int bracketIndex;
+        int weaponIndex;
         List<PlayerStats> playerList = new List<PlayerStats>();
         Dictionary<string, int> playerIndexTracker = new Dictionary<string, int>();
-        Dictionary<int, int> test = new Dictionary<int, int>();
         OET worldOET = new OET();
         string[] worldEventTypes = { "Round_Start", "Round_Overtime", "Round_Win", "Round_Length", "Game_Over" };
         string currentLine = "N/A";//the current line in the opened log
@@ -29,7 +31,7 @@ namespace LogCruncher
             while (complete == false)
             {
                 Console.WriteLine("What log is being opened");
-                logToOpen = Console.ReadLine()+".log";
+                logToOpen = Console.ReadLine() + ".log";
                 logCheck = false;
                 while (logCheck == false)
                 {
@@ -51,7 +53,6 @@ namespace LogCruncher
                         logCheck = true;
                     }
                     logCheck = true;//stops the infinate loop (i am very smaart)
-                    Console.WriteLine();//why is this here?
                 }
             }
         }
@@ -84,7 +85,7 @@ namespace LogCruncher
         {
             string playerName = playerLine.Substring(playerLine.IndexOf("\"") + 1, playerLine.IndexOf("<") - 26);// -26 cos there are 26 characters at the start of everyline in a log file
             //Console.WriteLine(playerName);
-            string playerID = playerLine.Substring(playerLine.IndexOf("U:1:") + 4, 9);//gets steam ID of the players
+            string playerID = playerLine.Substring(playerLine.IndexOf("U:1:") + 4, playerLine.IndexOf("]") - (playerLine.IndexOf("U:1:") + 4));//gets steam ID of the players
             // code below for defining players
             if (playerIndexTracker.ContainsKey(playerID) == false)//tracking where in the list of players a certain player is using their steam ID
             {
@@ -119,15 +120,29 @@ namespace LogCruncher
             //what have they done in this line
             if (playerLine.Contains("shot_fired"))
             {
-                int weaponIndex = playerLine.IndexOf("weapon");
-                int bracketIndex = playerLine.IndexOf(")");
-                Console.WriteLine(weaponIndex + " " + bracketIndex);
-                Console.ReadLine();
-                playerList[playerIndexTracker[playerID]].Weapon = playerLine.Substring(weaponIndex+8,bracketIndex-weaponIndex-9);//woof
-                Console.WriteLine(playerList[playerIndexTracker[playerID]].Weapon);
-                Console.ReadLine();
+                weaponIndex = playerLine.IndexOf("weapon");
+                bracketIndex = playerLine.IndexOf(")");
+                //Console.WriteLine(weaponIndex + " " + bracketIndex);
+                //Console.ReadLine();
+                playerList[playerIndexTracker[playerID]].Weapon = playerLine.Substring(weaponIndex + 8, bracketIndex - weaponIndex - 9);//this feels a bit weird
+                //Console.WriteLine(playerList[playerIndexTracker[playerID]].Weapon);
+                //Console.ReadLine();
             }
-            //Console.WriteLine(playerList[playerIndexTracker[playerID]].All);
+            if (playerLine.Contains("killed") && !playerLine.Contains("feign_death"))
+            {
+                string playerVictimID = playerLine.Substring(playerLine.LastIndexOf("U:1:") + 4, playerLine.LastIndexOf("]") - (playerLine.LastIndexOf("U:1:") + 4));
+                Console.WriteLine(playerVictimID);
+                Console.ReadLine();
+                if (!playerList[playerIndexTracker[playerID]].PlayerKillsIndexTracker.ContainsKey(playerVictimID))//doesn't contain current player
+                {
+                    playerList[playerIndexTracker[playerID]].PlayerKillsList.Add(new PlayerStats.PlayerKillsStats(playerVictimID, "", GetTime(playerLine)));//another happy line of code :)
+                }
+
+            }
+        }
+        int GetTime(string input)//DO THIS LATER
+        {
+            return 0;
         }
     }
 }

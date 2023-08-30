@@ -9,7 +9,20 @@ namespace PlayerHandler
             this.Team = "";
             this.PlayerClass = "";//class in this instance refers to the nine classes in the game not classes the programming thing
             this.Weapon = "";
+            this.Kills =0;
             this.All = this.UserName + this.Team + this.PlayerClass + this.Weapon + this.DamageDelt + this.DamageTaken + this.ShotsTotal + this.ShotsHit + this.HealingDone + this.HealingRecieved + this.Kills + this.Deaths + this.Assists + this.HealthPickups + this.SecondsTotal;
+        }
+        public class PlayerKillsStats
+        {
+            public PlayerKillsStats(string victimID, string weaponUsed, int killTime)
+            {
+                this.PlayerKilledID = victimID;
+                this.PlayerWeapon = weaponUsed;
+                this.TimeOfKill = killTime;
+            }
+            public string PlayerKilledID { set; get; }
+            public string PlayerWeapon { set; get; }
+            public int TimeOfKill { set; get; }
         }
         public string UserID { set; get; }
         public string UserName { set; get; }
@@ -28,5 +41,8 @@ namespace PlayerHandler
         public int HealthPickups { set; get; }
         public string All { set; get; }
         public int SecondsTotal { set; get; }
+        public List<PlayerKillsStats> PlayerKillsList = new List<PlayerKillsStats>();
+        public Dictionary<string,int> PlayerKillsIndexTracker = new Dictionary<string, int>();
+
     }
 }

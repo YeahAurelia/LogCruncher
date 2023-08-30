@@ -1,3 +1,5 @@
 8chars in time 15 chars from line start
 , playerLine.IndexOf("]><")
-84748
+Store players 
+Kills who they killed what weapon they killed with when
+
