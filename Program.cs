@@ -16,6 +16,7 @@ namespace LogCruncher
         Dictionary<string, int> playerIndexTracker = new Dictionary<string, int>();
         OET worldOET = new OET();
         string[] worldEventTypes = { "Round_Start", "Round_Overtime", "Round_Win", "Round_Length", "Game_Over" };
+        string[] customKillTypes = { "headshot", "backstab" };
         string currentLine = "N/A";//the current line in the opened log
         string logToOpen = "N/A";//the log that must be opened
         bool logCheck;//bool for checking if log loaded and a line can be read
@@ -130,12 +131,35 @@ namespace LogCruncher
             }
             if (playerLine.Contains("killed") && !playerLine.Contains("feign_death"))
             {
+                playerList[playerIndexTracker[playerID]].Kills++;
+                string customKill = "n/a";
+                if (playerLine.Contains("customkill"))
+                {
+                    for (int i = 0; i < customKillTypes.Count(); i++)
+                    {
+                        customKill = customKillTypes[i];
+                    }
+                }
+                else
+                {
+                    customKill = "n/a";
+                }
+                if (customKill == "headshot")
+                {
+                    playerList[playerIndexTracker[playerID]].HeadShots++;
+                }
+                else if (customKill == "backstab")
+                {
+                    playerList[playerIndexTracker[playerID]].BackStabs++;
+                }
                 string playerVictimID = playerLine.Substring(playerLine.LastIndexOf("U:1:") + 4, playerLine.LastIndexOf("]") - (playerLine.LastIndexOf("U:1:") + 4));
                 Console.WriteLine(playerVictimID);
                 Console.ReadLine();
                 if (!playerList[playerIndexTracker[playerID]].PlayerKillsIndexTracker.ContainsKey(playerVictimID))//doesn't contain current player
                 {
-                    playerList[playerIndexTracker[playerID]].PlayerKillsList.Add(new PlayerStats.PlayerKillsStats(playerVictimID, "", GetTime(playerLine)));//another happy line of code :)
+                    playerList[playerIndexTracker[playerID]]/*(specifies the player who got the kill)*/.PlayerKillsList.Add/*add to their list of kills*/(new PlayerStats.PlayerKillsStats/*adds the kill to the list (PlayerKillsStats class)*/(playerVictimID,/*the player killed*/ "",/*the weapon used (NOT IMPLEMENTED YET)*/ GetTime(playerLine),/*when it occured*/ customKill/*was it a special kill like a headshot or backstab*/));//This creates adds a new kill to the list of kills within the player described in the list of players using the index trackers | another happy line of code :)
+                    playerList[playerIndexTracker[playerID]]/*(specifies the player who got the kill)*/.PlayerKillsIndexTracker.Add/*(Add to the dictionary that I use to call those kills)*/(playerVictimID/*(the victims userID as value)*/, playerList[playerIndexTracker[playerID]].Kills - 1/*and the index of where in the list the kill occurs*/);//this records the kill in that list for the index tracker of the playerkills class list in the playerstats class
+                    Console.WriteLine(playerList[playerIndexTracker[playerID]].PlayerKillsList[playerList[playerIndexTracker[playerID]].PlayerKillsIndexTracker[playerVictimID]].All);//surely there's a better way wtf is this
                 }
 
             }
