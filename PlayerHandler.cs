@@ -10,9 +10,9 @@ namespace PlayerHandler
             this.PlayerClass = "";//class in this instance refers to the nine classes in the game not classes the programming thing
             this.Weapon = "";
             this.Kills = 0;
-            this.HeadShots =0;
-            this.BackStabs =0;
-            this.All = this.UserName + this.Team + this.PlayerClass + this.Weapon + this.DamageDelt + this.DamageTaken + this.ShotsTotal + this.ShotsHit + this.HealingDone + this.HealingRecieved + this.Kills + this.Deaths + this.Assists + this.HealthPickups + this.SecondsTotal;
+            this.HeadShots = 0;
+            this.BackStabs = 0;
+            
         }
         public class PlayerKillsStats
         {
@@ -22,13 +22,29 @@ namespace PlayerHandler
                 this.PlayerWeapon = weaponUsed;
                 this.TimeOfKill = killTime;
                 this.SpecialKill = special;
-                this.All = this.PlayerKilledID + this.PlayerWeapon + this.TimeOfKill + this.SpecialKill;
             }
             public string PlayerKilledID { set; get; }
             public string PlayerWeapon { set; get; }
             public string SpecialKill { set; get; }
             public int TimeOfKill { set; get; }
-            public string All { set; get; }
+            public string All()
+            {
+                return this.PlayerKilledID + this.PlayerWeapon + this.TimeOfKill + this.SpecialKill;
+            }
+        }
+        public class PlayerDamageStats
+        {
+            public PlayerDamageStats(string playerID)
+            {
+                this.PlayerDamagedID = playerID;
+            }
+            public string PlayerDamagedID { set; get; }
+            public int DamageDelt { set; get; }
+            public int DamageTaken { set; get; }
+            public string All()
+            {
+                return this.PlayerDamagedID + " damage delt: " + this.DamageDelt + " damage taken: " + this.DamageTaken;
+            }
         }
         public string UserID { set; get; }
         public string UserName { set; get; }
@@ -47,10 +63,16 @@ namespace PlayerHandler
         public int HealthPickups { set; get; }
         public int HeadShots { set; get; }
         public int BackStabs { set; get; }
-        public string All { set; get; }
-        public int SecondsTotal { set; get; }
-        public List<PlayerKillsStats> PlayerKillsList = new List<PlayerKillsStats>();
-        public Dictionary<string, int> PlayerKillsIndexTracker = new Dictionary<string, int>();
 
+        public int SecondsTotal { set; get; }
+        public int PlayersDamaged { set; get; }
+        public List<PlayerKillsStats> PlayerKillsList = new List<PlayerKillsStats>();
+        public List<PlayerDamageStats> PlayerDamageList = new List<PlayerDamageStats>();
+        public Dictionary<int, string> PlayerKillsIndexTracker = new Dictionary<int, string>();
+        public Dictionary<string, int> PlayerDamageIndexTracker = new Dictionary<string, int>();
+        public string All()
+        {
+            return this.UserName + this.Team + this.PlayerClass + this.Weapon + this.DamageDelt + this.DamageTaken + this.ShotsTotal + this.ShotsHit + this.HealingDone + this.HealingRecieved + this.Kills + this.Deaths + this.Assists + this.HealthPickups + this.SecondsTotal;
+        }
     }
 }

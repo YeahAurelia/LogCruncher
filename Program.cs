@@ -84,6 +84,8 @@ namespace LogCruncher
         }
         void TrackPlayerEvents(string playerLine)
         {
+            int damageInLine = 0;
+            string playerVictimID;
             string playerName = playerLine.Substring(playerLine.IndexOf("\"") + 1, playerLine.IndexOf("<") - 26);// -26 cos there are 26 characters at the start of everyline in a log file
             //Console.WriteLine(playerName);
             string playerID = playerLine.Substring(playerLine.IndexOf("U:1:") + 4, playerLine.IndexOf("]") - (playerLine.IndexOf("U:1:") + 4));//gets steam ID of the players
@@ -119,7 +121,7 @@ namespace LogCruncher
                 }
             }
             //what have they done in this line
-            if (playerLine.Contains("shot_fired"))
+            if (playerLine.Contains("shot_fired"))//needs to change Maybe redundant idk
             {
                 weaponIndex = playerLine.IndexOf("weapon");
                 bracketIndex = playerLine.IndexOf(")");
@@ -135,7 +137,7 @@ namespace LogCruncher
                 string customKill = "n/a";
                 if (playerLine.Contains("customkill"))
                 {
-                    for (int i = 0; i < customKillTypes.Count(); i++)
+                    for (int i = 0; i < customKillTypes.Count(); i++)// incase i come across more custom kill types i can add them to the array idk if there evn are anymore
                     {
                         customKill = customKillTypes[i];
                     }
@@ -152,21 +154,47 @@ namespace LogCruncher
                 {
                     playerList[playerIndexTracker[playerID]].BackStabs++;
                 }
-                string playerVictimID = playerLine.Substring(playerLine.LastIndexOf("U:1:") + 4, playerLine.LastIndexOf("]") - (playerLine.LastIndexOf("U:1:") + 4));
-                Console.WriteLine(playerVictimID);
-                Console.ReadLine();
-                if (!playerList[playerIndexTracker[playerID]].PlayerKillsIndexTracker.ContainsKey(playerVictimID))//doesn't contain current player
+                playerVictimID = playerLine.Substring(playerLine.LastIndexOf("U:1:") + 4, playerLine.LastIndexOf("]") - (playerLine.LastIndexOf("U:1:") + 4));
+                playerList[playerIndexTracker[playerID]]/*(specifies the player who got the kill)*/.PlayerKillsList.Add/*add to their list of kills*/(new PlayerStats.PlayerKillsStats/*adds the kill to the list (PlayerKillsStats class)*/(playerVictimID,/*the player killed*/ "",/*the weapon used (NOT IMPLEMENTED YET)*/ GetTime(playerLine),/*when it occured*/ customKill/*was it a special kill like a headshot or backstab*/));//This creates adds a new kill to the list of kills within the player described in the list of players using the index trackers | another happy line of code :)
+                playerList[playerIndexTracker[playerID]]/*(specifies the player who got the kill)*/.PlayerKillsIndexTracker.Add/*(Add to the dictionary that I use to call those kills)*/(playerList[playerIndexTracker[playerID]].Kills - 1,/*and the index of where in the list the kill occurs*/playerVictimID/*(the victims userID as value)*/);//this records the kill in that list for the index tracker of the playerkills class list in the playerstats class
+            }
+            if (playerLine.Contains("damage"))
+            {   
+                damageInLine = getDamage(playerLine);
+                playerVictimID = playerLine.Substring(playerLine.LastIndexOf("U:1:") + 4, playerLine.LastIndexOf("]") - (playerLine.LastIndexOf("U:1:") + 4));
+                if (!playerList[playerIndexTracker[playerID]].PlayerDamageIndexTracker.ContainsKey(playerVictimID))
                 {
-                    playerList[playerIndexTracker[playerID]]/*(specifies the player who got the kill)*/.PlayerKillsList.Add/*add to their list of kills*/(new PlayerStats.PlayerKillsStats/*adds the kill to the list (PlayerKillsStats class)*/(playerVictimID,/*the player killed*/ "",/*the weapon used (NOT IMPLEMENTED YET)*/ GetTime(playerLine),/*when it occured*/ customKill/*was it a special kill like a headshot or backstab*/));//This creates adds a new kill to the list of kills within the player described in the list of players using the index trackers | another happy line of code :)
-                    playerList[playerIndexTracker[playerID]]/*(specifies the player who got the kill)*/.PlayerKillsIndexTracker.Add/*(Add to the dictionary that I use to call those kills)*/(playerVictimID/*(the victims userID as value)*/, playerList[playerIndexTracker[playerID]].Kills - 1/*and the index of where in the list the kill occurs*/);//this records the kill in that list for the index tracker of the playerkills class list in the playerstats class
-                    Console.WriteLine(playerList[playerIndexTracker[playerID]].PlayerKillsList[playerList[playerIndexTracker[playerID]].PlayerKillsIndexTracker[playerVictimID]].All);//surely there's a better way wtf is this
+                    playerList[playerIndexTracker[playerID]].PlayerDamageList.Add(new PlayerStats.PlayerDamageStats(playerVictimID));
+                    playerList[playerIndexTracker[playerID]].PlayerDamageIndexTracker.Add(playerVictimID, playerList[playerIndexTracker[playerID]].PlayersDamaged);
+                    playerList[playerIndexTracker[playerID]].PlayersDamaged++;
                 }
-
+                Console.WriteLine(damageInLine);
+                Console.ReadLine();
+                playerList[playerIndexTracker[playerID]].PlayerDamageList[playerList[playerIndexTracker[playerID]].PlayerDamageIndexTracker[playerVictimID]].DamageDelt = playerList[playerIndexTracker[playerID]].PlayerDamageList[playerList[playerIndexTracker[playerID]].PlayerDamageIndexTracker[playerVictimID]].DamageDelt+damageInLine;
+                Console.WriteLine(playerList[playerIndexTracker[playerID]].PlayerDamageList[playerList[playerIndexTracker[playerID]].PlayerDamageIndexTracker[playerVictimID]].All());
+                Console.ReadLine();
             }
         }
         int GetTime(string input)//DO THIS LATER
         {
             return 0;
+        }
+        int getDamage(string input)
+        {
+            int test = 1;//change this int name later or something
+            int damageTotal = 0;
+            for (int i = 1; i < 10; i++)
+            {
+                if (int.TryParse(input.Substring(input.IndexOf("(damage")+9, i), out test))
+                {
+                    damageTotal = test;
+                }
+                else
+                {
+                    i = 11;
+                }
+            }
+            return damageTotal;
         }
     }
 }
