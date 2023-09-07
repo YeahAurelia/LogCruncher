@@ -12,7 +12,7 @@ namespace PlayerHandler
             this.Kills = 0;
             this.HeadShots = 0;
             this.BackStabs = 0;
-            
+
         }
         public class PlayerKillsStats
         {
@@ -40,10 +40,10 @@ namespace PlayerHandler
             }
             public string PlayerDamagedID { set; get; }
             public int DamageDelt { set; get; }
-            public int DamageTaken { set; get; }
+            public int TimeTemp { set; get; }
             public string All()
             {
-                return this.PlayerDamagedID + " damage delt: " + this.DamageDelt + " damage taken: " + this.DamageTaken;
+                return this.PlayerDamagedID + " damage delt: " + this.DamageDelt;
             }
         }
         public string UserID { set; get; }

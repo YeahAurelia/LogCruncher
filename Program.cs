@@ -7,11 +7,11 @@ namespace LogCruncher
 {
     internal class Program
     {
-        PlayerStats tester = new PlayerStats("", "");
         int worldEventCounter = 0;
         int playerCount = 0;
         int bracketIndex;
         int weaponIndex;
+        int startTime;
         List<PlayerStats> playerList = new List<PlayerStats>();
         Dictionary<string, int> playerIndexTracker = new Dictionary<string, int>();
         OET worldOET = new OET();
@@ -63,7 +63,7 @@ namespace LogCruncher
             {
                 TrackWorldEvents(logLine);
             }
-            if (logLine.Contains("U:1") && !logLine.Contains("pointcaptured"))//this line always appears in user related lines but never world related lines
+            if (logLine.Contains("U:1") && !logLine.Contains("pointcaptured"))//point captured lines are the only world lines that have user data in them so need to be filtered out
             {
                 TrackPlayerEvents(logLine);
             }
@@ -94,7 +94,6 @@ namespace LogCruncher
                 playerCount++;
             }
             GetTeam(playerLine);
-            //what have they done in this line
             if (playerLine.Contains("shot_fired"))//needs to change Maybe redundant idk
             {
                 weaponIndex = playerLine.IndexOf("weapon");
@@ -112,11 +111,28 @@ namespace LogCruncher
                 AddDamage(playerLine);
             }
         }
-        int GetTime(string input)//DO THIS LATER
+        int GetTime(string input, bool isStartTime)//gets the time an event happened in seconds based on the time provided in logs
         {
-            return 0;
+            string currentSeconds = input.Substring(21, 2);
+            string currentMinutes = input.Substring(18, 2);
+            string currentHours = input.Substring(15, 2);
+            int seconds = Int32.Parse(currentSeconds);
+            int minutes = Int32.Parse(currentMinutes);
+            int hours = Int32.Parse(currentHours);
+            Console.WriteLine(hours + ":" + minutes + ":" + seconds);
+            int secondsCombine = seconds + (minutes * 60) + ((hours * 60) * 60);//need to impliment a fix for games that start past 23 and end after midnight as 0 will be regarded as coming before 23
+            Console.WriteLine(secondsCombine);
+            Console.ReadLine();
+            if (!isStartTime)
+            {
+                return secondsCombine - startTime;
+            }
+            else
+            {
+                return secondsCombine;
+            }
         }
-        int getDamage(string input)
+        int GetDamage(string input)//finds the amount of damage in the line and returns it as an int
         {
             int test = 1;//change this int name later or something
             int damageTotal = 0;
@@ -160,7 +176,7 @@ namespace LogCruncher
             }
 
         }
-        void AddKill(string playerLine)
+        void AddKill(string playerLine)//adds kill to the class kill list
         {
             string playerVictimID;
             string playerID = playerLine.Substring(playerLine.IndexOf("U:1:") + 4, playerLine.IndexOf("]") - (playerLine.IndexOf("U:1:") + 4));//gets steam ID of the players
@@ -186,14 +202,14 @@ namespace LogCruncher
                 playerList[playerIndexTracker[playerID]].BackStabs++;
             }
             playerVictimID = playerLine.Substring(playerLine.LastIndexOf("U:1:") + 4, playerLine.LastIndexOf("]") - (playerLine.LastIndexOf("U:1:") + 4));
-            playerList[playerIndexTracker[playerID]]/*(specifies the player who got the kill)*/.PlayerKillsList.Add/*add to their list of kills*/(new PlayerStats.PlayerKillsStats/*adds the kill to the list (PlayerKillsStats class)*/(playerVictimID,/*the player killed*/ "",/*the weapon used (NOT IMPLEMENTED YET)*/ GetTime(playerLine),/*when it occured*/ customKill/*was it a special kill like a headshot or backstab*/));//This creates adds a new kill to the list of kills within the player described in the list of players using the index trackers | another happy line of code :)
+            playerList[playerIndexTracker[playerID]]/*(specifies the player who got the kill)*/.PlayerKillsList.Add/*add to their list of kills*/(new PlayerStats.PlayerKillsStats/*adds the kill to the list (PlayerKillsStats class)*/(playerVictimID,/*the player killed*/ "",/*the weapon used (NOT IMPLEMENTED YET)*/ GetTime(playerLine, false),/*when it occured*/ customKill/*was it a special kill like a headshot or backstab*/));//This creates adds a new kill to the list of kills within the player described in the list of players using the index trackers | another happy line of code :)
             playerList[playerIndexTracker[playerID]]/*(specifies the player who got the kill)*/.PlayerKillsIndexTracker.Add/*(Add to the dictionary that I use to call those kills)*/(playerList[playerIndexTracker[playerID]].Kills - 1,/*and the index of where in the list the kill occurs*/playerVictimID/*(the victims userID as value)*/);//this records the kill in that list for the index tracker of the playerkills class list in the playerstats class
         }
-        void AddDamage(string playerLine)
+        void AddDamage(string playerLine)//adds damage to the class
         {
 
             int damageInLine;
-            damageInLine = getDamage(playerLine);
+            damageInLine = GetDamage(playerLine);
             string playerID = playerLine.Substring(playerLine.IndexOf("U:1:") + 4, playerLine.IndexOf("]") - (playerLine.IndexOf("U:1:") + 4));//gets steam ID of the players
             string playerVictimID = playerLine.Substring(playerLine.LastIndexOf("U:1:") + 4, playerLine.LastIndexOf("]") - (playerLine.LastIndexOf("U:1:") + 4));
             if (!playerList[playerIndexTracker[playerID]].PlayerDamageIndexTracker.ContainsKey(playerVictimID))
@@ -202,11 +218,7 @@ namespace LogCruncher
                 playerList[playerIndexTracker[playerID]].PlayerDamageIndexTracker.Add(playerVictimID, playerList[playerIndexTracker[playerID]].PlayersDamaged);
                 playerList[playerIndexTracker[playerID]].PlayersDamaged++;
             }
-            Console.WriteLine(damageInLine);
-            Console.ReadLine();
             playerList[playerIndexTracker[playerID]].PlayerDamageList[playerList[playerIndexTracker[playerID]].PlayerDamageIndexTracker[playerVictimID]].DamageDelt = playerList[playerIndexTracker[playerID]].PlayerDamageList[playerList[playerIndexTracker[playerID]].PlayerDamageIndexTracker[playerVictimID]].DamageDelt + damageInLine;
-            Console.WriteLine(playerList[playerIndexTracker[playerID]].PlayerDamageList[playerList[playerIndexTracker[playerID]].PlayerDamageIndexTracker[playerVictimID]].All());
-            Console.ReadLine();
         }
     }
 }
