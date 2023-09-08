@@ -12,9 +12,9 @@ namespace LogCruncher
         int bracketIndex;
         int weaponIndex;
         int startTime;
+        List<WorldEventHandler> eventList = new List<WorldEventHandler>();
         List<PlayerStats> playerList = new List<PlayerStats>();
         Dictionary<string, int> playerIndexTracker = new Dictionary<string, int>();
-        OET worldOET = new OET();
         string[] worldEventTypes = { "Round_Start", "Round_Overtime", "Round_Win", "Round_Length", "Game_Over" };
         string[] customKillTypes = { "headshot", "backstab" };
         string currentLine = "N/A";//the current line in the opened log
@@ -79,8 +79,12 @@ namespace LogCruncher
                     Console.WriteLine(eventName);
                 }
             }
-            worldOET.Add(worldEventCounter, worldLine.Substring(15, 8), eventName);
+            eventList.Add(new WorldEventHandler(eventName, GetTime(worldLine, false)));
             worldEventCounter++;
+            if (eventList[eventList.Count].EventName == "Round_Start" && eventList[eventList.Count - 1].EventName == "Round_Start")
+            {
+                ResetData(worldLine);
+            }
         }
         void TrackPlayerEvents(string playerLine)
         {
@@ -219,6 +223,13 @@ namespace LogCruncher
                 playerList[playerIndexTracker[playerID]].PlayersDamaged++;
             }
             playerList[playerIndexTracker[playerID]].PlayerDamageList[playerList[playerIndexTracker[playerID]].PlayerDamageIndexTracker[playerVictimID]].DamageDelt = playerList[playerIndexTracker[playerID]].PlayerDamageList[playerList[playerIndexTracker[playerID]].PlayerDamageIndexTracker[playerVictimID]].DamageDelt + damageInLine;
+        }
+        void ResetData(string input)
+        {
+            playerList.Clear();
+            playerIndexTracker.Clear();
+            eventList.Clear();
+            GetTime(input,true);
         }
     }
 }

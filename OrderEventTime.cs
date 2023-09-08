@@ -1,22 +1,13 @@
 namespace OETFunctions
 {
-    public struct OrderEventTime
+    public class WorldEventHandler
     {
-        public string EventName;
-        public string EventTime;
-    }
-    public class OET : Dictionary<int, OrderEventTime>
-    {
-        public void Add(int key, string eventLabel, string eventTimeLabel)
+        public WorldEventHandler(string eventName, int eventTime)
         {
-            OrderEventTime val;
-            val.EventName = eventLabel;
-            val.EventTime = eventTimeLabel;
-            this.Add(key, val);
+            this.EventName = eventName;
+            this.EventTime = eventTime;
         }
-        public string ReturnName()
-        {
-            return "";
-        }
+        public string EventName { set; get; }
+        public int EventTime { set; get; }
     }
 }
