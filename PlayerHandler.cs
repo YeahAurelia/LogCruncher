@@ -68,7 +68,7 @@ namespace PlayerHandler
         public int PlayersDamaged { set; get; }
         public List<PlayerKillsStats> PlayerKillsList = new List<PlayerKillsStats>();
         public List<PlayerDamageStats> PlayerDamageList = new List<PlayerDamageStats>();
-        public Dictionary<int, string> PlayerKillsIndexTracker = new Dictionary<int, string>();
+        public Dictionary<string, int> PlayerKillsIndexTracker = new Dictionary<string, int>();
         public Dictionary<string, int> PlayerDamageIndexTracker = new Dictionary<string, int>();
         public string All()
         {

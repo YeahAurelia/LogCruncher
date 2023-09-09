@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using OETFunctions;
 using PlayerHandler;
 
@@ -34,6 +35,7 @@ namespace LogCruncher
                 Console.WriteLine("What log is being opened");
                 logToOpen = Console.ReadLine() + ".log";
                 logCheck = false;
+                eventList.Add(new WorldEventHandler("LOG START", 0));
                 while (logCheck == false)
                 {
                     try
@@ -81,7 +83,7 @@ namespace LogCruncher
             }
             eventList.Add(new WorldEventHandler(eventName, GetTime(worldLine, false)));
             worldEventCounter++;
-            if (eventList[eventList.Count].EventName == "Round_Start" && eventList[eventList.Count - 1].EventName == "Round_Start")
+            if (eventList[eventList.Count-1].EventName == "Round_Start")
             {
                 ResetData(worldLine);
             }
@@ -125,8 +127,6 @@ namespace LogCruncher
             int hours = Int32.Parse(currentHours);
             Console.WriteLine(hours + ":" + minutes + ":" + seconds);
             int secondsCombine = seconds + (minutes * 60) + ((hours * 60) * 60);//need to impliment a fix for games that start past 23 and end after midnight as 0 will be regarded as coming before 23
-            Console.WriteLine(secondsCombine);
-            Console.ReadLine();
             if (!isStartTime)
             {
                 return secondsCombine - startTime;
@@ -207,7 +207,9 @@ namespace LogCruncher
             }
             playerVictimID = playerLine.Substring(playerLine.LastIndexOf("U:1:") + 4, playerLine.LastIndexOf("]") - (playerLine.LastIndexOf("U:1:") + 4));
             playerList[playerIndexTracker[playerID]]/*(specifies the player who got the kill)*/.PlayerKillsList.Add/*add to their list of kills*/(new PlayerStats.PlayerKillsStats/*adds the kill to the list (PlayerKillsStats class)*/(playerVictimID,/*the player killed*/ "",/*the weapon used (NOT IMPLEMENTED YET)*/ GetTime(playerLine, false),/*when it occured*/ customKill/*was it a special kill like a headshot or backstab*/));//This creates adds a new kill to the list of kills within the player described in the list of players using the index trackers | another happy line of code :)
-            playerList[playerIndexTracker[playerID]]/*(specifies the player who got the kill)*/.PlayerKillsIndexTracker.Add/*(Add to the dictionary that I use to call those kills)*/(playerList[playerIndexTracker[playerID]].Kills - 1,/*and the index of where in the list the kill occurs*/playerVictimID/*(the victims userID as value)*/);//this records the kill in that list for the index tracker of the playerkills class list in the playerstats class
+            playerList[playerIndexTracker[playerID]]/*(specifies the player who got the kill)*/.PlayerKillsIndexTracker.Add/*(Add to the dictionary that I use to call those kills)*/(playerVictimID/*(the victims userID as value)*/, playerList[playerIndexTracker[playerID]].Kills - 1/*and the index of where in the list the kill occurs*/);//this records the kill in that list for the index tracker of the playerkills class list in the playerstats class
+            Console.WriteLine(playerList[playerIndexTracker[playerID]].PlayerKillsList[playerList[playerIndexTracker[playerID]].PlayerKillsIndexTracker[playerVictimID]].TimeOfKill);
+            Console.ReadLine();
         }
         void AddDamage(string playerLine)//adds damage to the class
         {
@@ -229,7 +231,8 @@ namespace LogCruncher
             playerList.Clear();
             playerIndexTracker.Clear();
             eventList.Clear();
-            GetTime(input,true);
+            eventList.Add(new WorldEventHandler("LOG START", 0));
+            startTime = GetTime(input, true);
         }
     }
 }

@@ -3,3 +3,5 @@
 Store players 
 Kills who they killed what weapon they killed with when
 
+WHY TF DID I REVERSE THE KEY AND VALUE IN THE PlayerKillsIndexTracker WHAT WAS I THINKING
+WHAT HAVE I BROKEN BY CHANGING IT BACK?!?!?!?
