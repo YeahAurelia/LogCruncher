@@ -22,6 +22,7 @@ namespace LogCruncher
         string logToOpen = "N/A";//the log that must be opened
         bool logCheck;//bool for checking if log loaded and a line can be read
         bool complete = false;
+        bool isTracking = false;
         static void Main(string[] args)
         {
             Console.WriteLine("Log Cruncher Console");
@@ -42,13 +43,13 @@ namespace LogCruncher
                     {
                         using (StreamReader sr = new StreamReader(logToOpen))
                         {
-                            currentLine = sr.ReadLine();
+                            currentLine = sr.ReadLine() + " ";
                             while ((currentLine = sr.ReadLine()) != null)
                             {
                                 ReadLog(currentLine);
                             }
                         }
-                        Console.Write(playerList.Count() + " players");
+                        Console.WriteLine(playerList.Count() + " players");
                     }
                     catch (Exception e)
                     {
@@ -57,6 +58,7 @@ namespace LogCruncher
                     }
                     logCheck = true;//stops the infinate loop (i am very smaart)
                 }
+                AnalysisMode();
             }
         }
         void ReadLog(string logLine)//reads the line from the log and determines what it is about
@@ -78,14 +80,21 @@ namespace LogCruncher
                 if (worldLine.Contains(worldEventTypes[i]))
                 {
                     eventName = worldEventTypes[i];
-                    Console.WriteLine(eventName);
                 }
             }
             eventList.Add(new WorldEventHandler(eventName, GetTime(worldLine, false)));
             worldEventCounter++;
-            if (eventList[eventList.Count-1].EventName == "Round_Start")
+            if (eventList[eventList.Count - 1].EventName == "Round_Start" && eventList[eventList.Count - 2].EventName != "Round_Length")
             {
                 ResetData(worldLine);
+            }
+            else if (eventName == "Round_Win" || eventName == "Game_Over")
+            {
+                isTracking = false;
+            }
+            else
+            {
+                isTracking = true;
             }
         }
         void TrackPlayerEvents(string playerLine)
@@ -108,11 +117,11 @@ namespace LogCruncher
                 //Console.ReadLine();
                 playerList[playerIndexTracker[playerID]].Weapon = playerLine.Substring(weaponIndex + 8, bracketIndex - weaponIndex - 9);//this feels a bit weird
             }
-            if (playerLine.Contains("killed") && !playerLine.Contains("feign_death"))
+            if (playerLine.Contains("killed") && !playerLine.Contains("feign_death") && isTracking)
             {
                 AddKill(playerLine);
             }
-            if (playerLine.Contains("damage"))
+            if (playerLine.Contains("damage") && isTracking)
             {
                 AddDamage(playerLine);
             }
@@ -125,8 +134,7 @@ namespace LogCruncher
             int seconds = Int32.Parse(currentSeconds);
             int minutes = Int32.Parse(currentMinutes);
             int hours = Int32.Parse(currentHours);
-            Console.WriteLine(hours + ":" + minutes + ":" + seconds);
-            int secondsCombine = seconds + (minutes * 60) + ((hours * 60) * 60);//need to impliment a fix for games that start past 23 and end after midnight as 0 will be regarded as coming before 23
+            int secondsCombine = seconds + (minutes * 60) + (hours * 3600);//need to impliment a fix for games that start past 23 and end after midnight as 0 will be regarded as coming before 23
             if (!isStartTime)
             {
                 return secondsCombine - startTime;
@@ -207,9 +215,6 @@ namespace LogCruncher
             }
             playerVictimID = playerLine.Substring(playerLine.LastIndexOf("U:1:") + 4, playerLine.LastIndexOf("]") - (playerLine.LastIndexOf("U:1:") + 4));
             playerList[playerIndexTracker[playerID]]/*(specifies the player who got the kill)*/.PlayerKillsList.Add/*add to their list of kills*/(new PlayerStats.PlayerKillsStats/*adds the kill to the list (PlayerKillsStats class)*/(playerVictimID,/*the player killed*/ "",/*the weapon used (NOT IMPLEMENTED YET)*/ GetTime(playerLine, false),/*when it occured*/ customKill/*was it a special kill like a headshot or backstab*/));//This creates adds a new kill to the list of kills within the player described in the list of players using the index trackers | another happy line of code :)
-            playerList[playerIndexTracker[playerID]]/*(specifies the player who got the kill)*/.PlayerKillsIndexTracker.Add/*(Add to the dictionary that I use to call those kills)*/(playerVictimID/*(the victims userID as value)*/, playerList[playerIndexTracker[playerID]].Kills - 1/*and the index of where in the list the kill occurs*/);//this records the kill in that list for the index tracker of the playerkills class list in the playerstats class
-            Console.WriteLine(playerList[playerIndexTracker[playerID]].PlayerKillsList[playerList[playerIndexTracker[playerID]].PlayerKillsIndexTracker[playerVictimID]].TimeOfKill);
-            Console.ReadLine();
         }
         void AddDamage(string playerLine)//adds damage to the class
         {
@@ -228,11 +233,116 @@ namespace LogCruncher
         }
         void ResetData(string input)
         {
+            Console.Clear();
+            playerCount = 0;
             playerList.Clear();
             playerIndexTracker.Clear();
             eventList.Clear();
             eventList.Add(new WorldEventHandler("LOG START", 0));
             startTime = GetTime(input, true);
+            isTracking = true;
+        }
+        void AnalysisMode()
+        {
+            string input;
+            bool analysing = true;
+            while (analysing)
+            {
+                Console.Clear();
+                Console.WriteLine("what player would you like to view?");
+                Console.WriteLine("seach by ID\"123456,\" class \"scout,\" Team \"Red,\" or User Name \"Relz\"");
+                Console.WriteLine("Or type \"All\" to send all data to a text file");
+                Console.WriteLine("type \"back\" to crunch another log");
+                input = Console.ReadLine() + " ";
+                if (input == "back " || input == "Back ")
+                {
+                    analysing = false;
+                }
+                switch (input)
+                {
+                    case "scout ":
+                        Console.Clear();
+                        for (int i = 0; i < playerCount - 1; i++)
+                        {
+                            if (playerList[i].PlayerClass == "scout")
+                            {
+                                Console.WriteLine("test");
+                                Console.WriteLine(playerList[i].UserID + " " + playerList[i].UserName);
+                            }
+                        }
+                        Console.WriteLine("please enter the desired players UserID or User name");
+                        Console.ReadLine();
+                        break;
+                    case "soldier ":
+                        // code block
+                        break;
+                    case "pyro ":
+                        // code block
+                        break;
+                    case "demoman ":
+                        // code block
+                        break;
+                    case "heavyweapons ":
+                        // code block
+                        break;
+                    case "engineer ":
+                        // code block
+                        break;
+                    case "medic ":
+                        // code block
+                        break;
+                    case "sniper ":
+                        // code block
+                        break;
+                    case "spy ":
+                        // code block
+                        break;
+                    case "Red ":
+                        Console.Clear();
+                        for (int i = 0; i < playerCount; i++)
+                        {
+                            if (playerList[i].Team == "Red")
+                            {
+                                Console.WriteLine(playerList[i].UserName + " " + playerList[i].UserID);
+                            }
+                        }
+                        Console.WriteLine("please enter the desired players UserID or User name");
+                        Console.ReadLine();
+                        break;
+                    case "Blue ":
+                        Console.Clear();
+                        for (int i = 0; i < playerCount; i++)
+                        {
+                            try
+                            {
+                                if (playerList[i].Team == "Blue")
+                                {
+                                    Console.WriteLine(playerList[i].UserName + " " + playerList[i].UserID);
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.Message);
+                            }
+                        }
+                        Console.WriteLine("please enter the desired players UserID or User name");
+                        Console.ReadLine();
+                        break;
+                    case "temp ":
+                        // code block
+                        break;
+                    default:
+                        Console.Clear();
+                        Console.WriteLine("Error Please retype your input and remember it is case sensitive");
+                        Console.ReadLine();
+                        break;
+                }
+
+            }
+        }
+        void PlayerAnalysis(string input)
+        {
+            
         }
     }
 }
