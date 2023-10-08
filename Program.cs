@@ -231,6 +231,10 @@ namespace LogCruncher
             }
             playerList[playerIndexTracker[playerID]].PlayerDamageList[playerList[playerIndexTracker[playerID]].PlayerDamageIndexTracker[playerVictimID]].DamageDelt = playerList[playerIndexTracker[playerID]].PlayerDamageList[playerList[playerIndexTracker[playerID]].PlayerDamageIndexTracker[playerVictimID]].DamageDelt + damageInLine;
         }
+        void AddHealing()
+        {
+            
+        }
         void ResetData(string input)
         {
             Console.Clear();
@@ -342,7 +346,7 @@ namespace LogCruncher
         }
         void PlayerAnalysis(string input)
         {
-            
+            Console.Write("a");
         }
     }
 }
